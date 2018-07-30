@@ -1,3 +1,42 @@
-<p>
-  visualization works!
-</p>
+<div class="container">
+  <div [hidden]="submitted">
+    <h1>Patient Form</h1>
+    <form (ngSubmit)="onSubmit()" #patientForm="ngForm">
+
+      <div class="form-group">
+        <div class="row">
+          <div class="form1 col-md-4">
+            <label for="age">age</label>
+            <input type="text" class="form-control" id="age" [(ngModel)]="model.age" placeholder="enter age" name="age" #age="ngModel">
+          
+          </div>
+
+          <!-- <div class="form2 col-md-4">
+            <label for="ageCompareValue">ageCompareValue</label>
+            <select class="form-control" id="ageCompareValue" [(ngModel)]="ageCompareValue" name="ageCompareValue" #ageCompareValue="ngModel">
+              <option *ngFor="let comp of agecompare" [value]="comp">{{comp}}</option>
+            </select>
+          </div> -->
+          
+          <div class="form2 col-md-4">
+            <label for="gender">gender</label>
+            <select class="form-control" id="gender" [(ngModel)]="model.gender" name="gender" #gender="ngModel">
+              <option *ngFor="let gen of genders" [value]="gen">{{gen}}</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label for="disease">disease</label>
+        <select class="form-control" id="disease" [(ngModel)]="model.disease" name="disease" #disease="ngModel">
+          <option *ngFor="let dis of diseases" [value]="dis">{{dis}}</option>
+        </select>
+      </div>
+
+      <button type="submit" style="display: block; margin: 0 auto;" class="btn btn-success" [disabled]="!patientForm.form.valid">Submit</button>
+    </form>
+  </div>
+  <br>

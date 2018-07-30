@@ -29,5 +29,24 @@ router.post('/addUser', function (req, res) {
 });
 
 
+router.get('/getSpecifiedRecords',function(req,res,next) {
+
+    db.patientslogs.find({ 
+          
+         "age": {"$gt":"33"}    
+    
+         }
+    ,function(err,specifiedlogs){
+        if (err) {
+            console.log('erreor getting specified posts');
+        } else {
+            res.json(specifiedlogs);
+        }
+
+    })
+    
+});
+
+
 module.exports = router;
 
