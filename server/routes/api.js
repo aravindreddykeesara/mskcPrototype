@@ -31,16 +31,14 @@ router.post('/addUser', function (req, res) {
 
 router.get('/getSpecifiedRecords',function(req,res,next) {
 
-    db.patientslogs.find({ 
-          
-         "age": {"$gt":"33"}    
-    
-         }
-    ,function(err,specifiedlogs){
+    console.log('checking 2 user in db' + JSON.parse(req.query.updates).value);
+
+    db.patientslogs.find( JSON.parse(JSON.parse(req.query.updates).value),function(err,specifiedlogs){
         if (err) {
             console.log('erreor getting specified posts');
         } else {
             res.json(specifiedlogs);
+            console.log(specifiedlogs);
         }
 
     })
