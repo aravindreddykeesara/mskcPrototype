@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { DataSource } from '@angular/cdk/collections';
 import {PatientdataService} from '../../services/patientdata.service';
 import { Patients } from '../../models/patients.model';
 import { User } from '../../models/User';
+import { MatPaginator, MatTableDataSource } from '@angular/material';
 
 
 /* tslint:disable */
@@ -18,8 +19,11 @@ import { User } from '../../models/User';
 
 export class AddinfoComponent implements OnInit {
 
-  dataSource = new PatientDataSource(this.patientService);
+  dataSource;
+  
   displayedColumns = ['name', 'age', 'disease', 'gender'];
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(private patientService: PatientdataService) {}
   
@@ -29,15 +33,32 @@ export class AddinfoComponent implements OnInit {
   model = new User('','','','');
 
   ngOnInit() {
-     
+
+    this.patientService.getAllPatients().subscribe(data => {
+
+      console.log("table data" + data);
+
+      this.dataSource = new MatTableDataSource<User>(data);
+      this.dataSource.paginator = this.paginator;
+
+    })
+    
+   
+  }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   
   onSubmit() {
    this.patientService.addpatient(this.model).subscribe(data =>{
 
     if(data.status == 200){
-      console.log('no error');
-      this.dataSource = new PatientDataSource(this.patientService);
+      this.patientService.getAllPatients().subscribe(data => {
+
+        this.dataSource = new MatTableDataSource<User>(data);
+
+      })
     }else{
       console.log("err in data add");
     }
@@ -50,16 +71,16 @@ export class AddinfoComponent implements OnInit {
 }
 
 
-export class PatientDataSource extends DataSource<any>{
+// export class PatientDataSource extends DataSource<any>{
 
-  constructor(private patientService: PatientdataService) {
-    super();
-  }
+//   constructor(private patientService: PatientdataService) {
+//     super();
+//   }
 
-  connect(): Observable<Patients[]> {
-    return this.patientService.getAllPatients();
-  }
+//   connect(): Observable<Patients[]> {
+//     return this.patientService.getAllPatients();
+//   }
 
-  disconnect() { }
+//   disconnect() { }
    
-}
+// }
