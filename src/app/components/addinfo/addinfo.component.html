@@ -1,91 +1,93 @@
 <div class="container">
-  <div [hidden]="submitted">
-    <h1>Patient Form</h1>
-    <form (ngSubmit)="onSubmit()" #patientForm="ngForm">
-      <div class="form-group">
-        <label for="name">PatientName</label>
-        <input type="text" class="form-control" id="name" required [(ngModel)]="model.name" placeholder="enter Name" name="name" #name="ngModel">
-        <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
-          Name is required
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="row">
-          <div class="form1 col-md-6">
-            <label for="age">age</label>
-            <input type="text" class="form-control" id="age" required [(ngModel)]="model.age" placeholder="enter age" name="age" #age="ngModel">
-            <div [hidden]="age.valid || age.pristine" class="alert alert-danger">
-              age is required
-            </div>
-          </div>
-
-      
-          <div class="form2 col-md-6">
-            <label for="gender">gender</label>
-            <select class="form-control" id="gender" required [(ngModel)]="model.gender" name="gender" #gender="ngModel">
-              <option *ngFor="let gen of genders" [value]="gen">{{gen}}</option>
-            </select>
-            <div [hidden]="gender.valid || gender.pristine" class="alert alert-danger">
-              gender is required
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-
-      <div class="form-group">
-        <label for="disease">disease</label>
-        <select class="form-control" id="disease" required [(ngModel)]="model.disease" name="disease" #disease="ngModel">
-          <option *ngFor="let dis of diseases" [value]="dis">{{dis}}</option>
-        </select>
-        <div [hidden]="disease.valid || disease.pristine" class="alert alert-danger">
-         select a disease
-        </div>
-      </div>
-
-      <button type="submit" style="display: block; margin: 0 auto;" class="btn btn-success" [disabled]="!patientForm.form.valid">Submit</button>
-    </form>
+  <h2>Patient Form</h2>
+  <div *ngIf="!model.name" class="alert alert-info" role="alert">
+    <strong>Heads up!</strong> use this form for adding patients to database
   </div>
+  <form (ngSubmit)="onSubmit()" #patientForm="ngForm">
+    <div class="form-group">
+      <label for="name">PatientName</label>
+      <input type="text" class="form-control" id="name" required [(ngModel)]="model.name" placeholder="enter Name" name="name"
+        #name="ngModel">
+      <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+        Name is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="row">
+        <div class="form1 col-md-6">
+          <label for="age">age</label>
+          <input type="number" min="1" max="100" class="form-control" id="age" required [(ngModel)]="model.age" placeholder="enter age" name="age" #age="ngModel">
+          <div [hidden]="age.valid || age.pristine" class="alert alert-danger">
+            age is required
+          </div>
+        </div>
+
+
+        <div class="form2 col-md-6">
+          <label for="gender">gender</label>
+          <select class="form-control" id="gender" required [(ngModel)]="model.gender" name="gender" #gender="ngModel">
+            <option *ngFor="let gen of genders" [value]="gen">{{gen}}</option>
+          </select>
+          <div [hidden]="gender.valid || gender.pristine" class="alert alert-danger">
+            gender is required
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <label for="disease">disease</label>
+      <select class="form-control" id="disease" required [(ngModel)]="model.disease" name="disease" #disease="ngModel">
+        <option *ngFor="let dis of diseases" [value]="dis">{{dis}}</option>
+      </select>
+      <div [hidden]="disease.valid || disease.pristine" class="alert alert-danger">
+        select a disease
+      </div>
+    </div>
+
+    <button type="submit" style="display: block; margin: 0 auto;" class="btn btn-success" [disabled]="!patientForm.form.valid">Submit</button>
+  </form>
+
   <br>
 
-<!-- table starts here -->
+  <!-- table starts here -->
 
+  <h2>All patients records :</h2>
+  <div class="mat-app-background basic-container">
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="search patient record here">
+    </mat-form-field>
 
-<div class="mat-app-background basic-container">
-  <mat-form-field>
-    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="search patient record here">
-  </mat-form-field>
+    <div class="mat-elevation-z8">
+      <mat-table [dataSource]="dataSource">
 
-  <div class="mat-elevation-z8">
-    <mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+          <mat-cell *matCellDef="let user"> {{user.name}} </mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-        <mat-cell *matCellDef="let user"> {{user.name}} </mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="age">
+          <mat-header-cell *matHeaderCellDef> Age </mat-header-cell>
+          <mat-cell *matCellDef="let user"> {{user.age}} </mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="age">
-        <mat-header-cell *matHeaderCellDef> Age </mat-header-cell>
-        <mat-cell *matCellDef="let user"> {{user.age}} </mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="disease">
+          <mat-header-cell *matHeaderCellDef> Disease </mat-header-cell>
+          <mat-cell *matCellDef="let user"> {{user.disease}} </mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="disease">
-        <mat-header-cell *matHeaderCellDef> Disease </mat-header-cell>
-        <mat-cell *matCellDef="let user"> {{user.disease}} </mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="gender">
+          <mat-header-cell *matHeaderCellDef> Gender </mat-header-cell>
+          <mat-cell *matCellDef="let user"> {{user.gender}} </mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="gender">
-        <mat-header-cell *matHeaderCellDef> Gender </mat-header-cell>
-        <mat-cell *matCellDef="let user"> {{user.gender}} </mat-cell>
-      </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-
-    </mat-table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      </mat-table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
   </div>
-</div>
-
