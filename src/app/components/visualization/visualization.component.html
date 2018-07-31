@@ -1,42 +1,101 @@
 <div class="container">
-  <div [hidden]="submitted">
-    <h1>Patient Form</h1>
-    <form (ngSubmit)="onSubmit()" #patientForm="ngForm">
+  <h2>Get patients with values selected below :</h2>
+  <form (ngSubmit)="onSubmit()" #patientForm="ngForm">
 
-      <div class="form-group">
-        <div class="row">
-          <div class="form1 col-md-4">
-            <label for="age">age</label>
-            <input type="text" class="form-control" id="age" [(ngModel)]="model.age" placeholder="enter age" name="age" #age="ngModel">
-          
-          </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="form1 col-md-4">
+          <label for="age">age</label>
+          <input type="number" min="1" max="5" class="form-control" id="age" [(ngModel)]="model.age" placeholder="enter age" name="age" #age="ngModel">
 
-          <!-- <div class="form2 col-md-4">
-            <label for="ageCompareValue">ageCompareValue</label>
-            <select class="form-control" id="ageCompareValue" [(ngModel)]="ageCompareValue" name="ageCompareValue" #ageCompareValue="ngModel">
-              <option *ngFor="let comp of agecompare" [value]="comp">{{comp}}</option>
-            </select>
-          </div> -->
-          
-          <div class="form2 col-md-4">
-            <label for="gender">gender</label>
-            <select class="form-control" id="gender" [(ngModel)]="model.gender" name="gender" #gender="ngModel">
-              <option *ngFor="let gen of genders" [value]="gen">{{gen}}</option>
-            </select>
-          </div>
+        </div>
 
+        <div class="form2 col-md-4">
+          <label for="ageCompareValue">age value comparator</label>
+          <select class="form-control" id="ageCompareValue" [(ngModel)]="ageCompareValue" name="ageCompareValue">
+            <option *ngFor="let comp of agecompare" [value]="comp">{{comp}}</option>
+          </select>
+        </div>
+
+        <div class="form2 col-md-4">
+          <label for="gender">gender</label>
+          <select class="form-control" id="gender" [(ngModel)]="model.gender" name="gender" #gender="ngModel">
+            <option *ngFor="let gen of genders" [value]="gen">{{gen}}</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <label for="disease">disease (required field)</label>
+      <select class="form-control" id="disease" required [(ngModel)]="model.disease" name="disease" #disease="ngModel">
+        <option *ngFor="let dis of diseases" [value]="dis">{{dis}}</option>
+      </select>
+    </div>
+
+    <button type="submit" style="display: block; margin: 0 auto;" class="btn btn-success" [disabled]="!patientForm.form.valid">Submit</button>
+  </form>
+
+  <br>
+
+
+
+  <mat-tab-group mat-stretch-tabs class="example-stretched-tabs mat-elevation-z4">
+    <mat-tab label="graph visualization">
+      <div *ngIf="!graph.data" class="alert alert-info" role="alert">
+        <strong>Heads up!</strong> please use the form provided above to query some results from mongoDb
+      </div>
+      <div *ngIf="graph.data">
+        <plotly-plot [data]="graph.data" [layout]="graph.layout"></plotly-plot>
+      </div>
+    </mat-tab>
+    <mat-tab class="tabledata" label="tabledata">
+      <br>
+      <p style="text-align: center;"> All records that satisfy above form-fields are fetched from MongoDB</p>
+      <div *ngIf="!graph.data" class="alert alert-info" role="alert">
+        <strong>Heads up!</strong> please use the form provided above to query some results from mongoDb
+      </div>
+      <div class="mat-app-background basic-container">
+        <mat-form-field>
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="search patient record here">
+        </mat-form-field>
+
+        <div class="mat-elevation-z8">
+          <mat-table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+              <mat-cell *matCellDef="let user"> {{user.name}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="age">
+              <mat-header-cell *matHeaderCellDef> Age </mat-header-cell>
+              <mat-cell *matCellDef="let user"> {{user.age}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="disease">
+              <mat-header-cell *matHeaderCellDef> Disease </mat-header-cell>
+              <mat-cell *matCellDef="let user"> {{user.disease}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="gender">
+              <mat-header-cell *matHeaderCellDef> Gender </mat-header-cell>
+              <mat-cell *matCellDef="let user"> {{user.gender}} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+          </mat-table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
         </div>
       </div>
 
 
-      <div class="form-group">
-        <label for="disease">disease</label>
-        <select class="form-control" id="disease" [(ngModel)]="model.disease" name="disease" #disease="ngModel">
-          <option *ngFor="let dis of diseases" [value]="dis">{{dis}}</option>
-        </select>
-      </div>
+    </mat-tab>
 
-      <button type="submit" style="display: block; margin: 0 auto;" class="btn btn-success" [disabled]="!patientForm.form.valid">Submit</button>
-    </form>
-  </div>
-  <br>
+  </mat-tab-group>
+
+</div>
