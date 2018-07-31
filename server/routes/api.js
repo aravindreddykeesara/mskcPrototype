@@ -16,7 +16,6 @@ router.get('/getAllPatients',function(req,res,next){
 
 
 router.post('/addUser', function (req, res) {
-    console.log('adding user to db');
     var newPatient = req.body;
     db.patientslogs.save(newPatient,function(err,useraddlogs){
         if(err){
@@ -31,14 +30,13 @@ router.post('/addUser', function (req, res) {
 
 router.get('/getSpecifiedRecords',function(req,res,next) {
 
-    console.log('checking 2 user in db' + JSON.parse(req.query.updates).value);
 
     db.patientslogs.find( JSON.parse(JSON.parse(req.query.updates).value),function(err,specifiedlogs){
         if (err) {
             console.log('erreor getting specified posts');
         } else {
             res.json(specifiedlogs);
-            console.log(specifiedlogs);
+
         }
 
     })
